@@ -46,6 +46,16 @@ Or from inside a Claude Code session:
 - Can be run against sessions of any project (as long as the session JSONL follows the Claude Code format).
 - Removal conditions: assistant answer text contains safety-classifier refusals, or system/user records contain safeguarding content (e.g. `safeguards stopped the response above · continuing once with that noted`), or user records contain `Your response above was stopped by a safety classifier`. Related child nodes (stop-hook, etc.) are repaired after removal.
 
+## As an OpenCode skill
+
+This repo also includes a `skill.yaml` so it can be used as an OpenCode skill:
+
+```bash
+opencode skill add OrzCat/remove-resume-answers
+```
+
+Or manually copy `skill.yaml` to `~/.opencode/skills/`.
+
 ## Notes
 
 - This operation writes directly into session files under `~/.claude/projects/...`; it is recommended to back up first.
