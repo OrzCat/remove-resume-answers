@@ -46,25 +46,12 @@ Or from inside a Claude Code session:
 - Can be run against sessions of any project (as long as the session JSONL follows the Claude Code format).
 - Removal conditions: assistant answer text contains safety-classifier refusals, or system/user records contain safeguarding content (e.g. `safeguards stopped the response above · continuing once with that noted`), or user records contain `Your response above was stopped by a safety classifier`. Related child nodes (stop-hook, etc.) are repaired after removal.
 
-## As an OpenCode skill
+## As an OpenCode plugin
 
-This repo includes a `skill.yaml` so it can be used as an OpenCode skill. OpenCode does not auto-download skill files from GitHub, so install with the one-liner:
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/OrzCat/remove-resume-answers/main/install.sh | bash
-```
-
-Or manually:
+Install directly from GitHub:
 
 ```bash
-# 1. Register the plugin (optional, for tracking)
 opencode plugin add OrzCat/remove-resume-answers
-
-# 2. Copy the skill file to OpenCode skills directory
-mkdir -p ~/.config/opencode/skills
-curl -o ~/.config/opencode/skills/remove-resume-answers.yaml https://raw.githubusercontent.com/OrzCat/remove-resume-answers/main/skill.yaml
-
-# 3. Reload OpenCode configuration
 opencode reload
 ```
 

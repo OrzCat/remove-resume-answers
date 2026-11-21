@@ -44,25 +44,12 @@ claude plugin install remove-resume-answers@orzcat
 - 可針對任何專案的 session 執行（只要 session JSONL 符合 Claude Code 格式）。
 - 移除的條件：assistant 回答文字含安全機制拒絕措辭，或 system / user 紀錄含 safeguarding 內容（如 `safeguards stopped the response above · continuing once with that noted`），或 user 紀錄含 `Your response above was stopped by a safety classifier`。移除後會修復相關子節點（stop-hook 等）的父連結。
 
-## 作為 OpenCode skill
+## 作為 OpenCode plugin
 
-此 repo 包含 `skill.yaml`，可作為 OpenCode skill 使用。OpenCode 不會自動從 GitHub 下載 skill 檔案，請用一行命令安裝：
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/OrzCat/remove-resume-answers/main/install.sh | bash
-```
-
-或手動安裝：
+直接從 GitHub 安裝：
 
 ```bash
-# 1. 註冊 plugin（選擇性，用於追蹤）
 opencode plugin add OrzCat/remove-resume-answers
-
-# 2. 將 skill 檔案複製到 OpenCode skills 目錄
-mkdir -p ~/.config/opencode/skills
-curl -o ~/.config/opencode/skills/remove-resume-answers.yaml https://raw.githubusercontent.com/OrzCat/remove-resume-answers/main/skill.yaml
-
-# 3. 重新載入 OpenCode 設定
 opencode reload
 ```
 
