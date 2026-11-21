@@ -1,0 +1,12 @@
+{
+  "name": "resume-answer-remover",
+  "owner": {
+    "name": "OrzCat",
+    "url": "https://github.com/OrzCat"
+  },
+  "version": "1.0.0",
+  "description": "Remove Claude Code session answers that were blocked or refused by the safety classifier (e.g. after `claude resume`). Generic across projects.",
+  "commands": [
+    "./commands/remove-resume-answers.md"
+  ]
+}
