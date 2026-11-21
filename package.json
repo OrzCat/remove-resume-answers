@@ -2,9 +2,6 @@
   "name": "remove-resume-answers",
   "version": "1.0.0",
   "description": "Remove Claude Code session answers blocked or refused by the safety classifier",
-  "main": "skill.yaml",
-  "opencode": {
-    "skill": "skill.yaml"
-  },
+  "main": "index.js",
   "license": "MIT"
 }
