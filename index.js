@@ -2,23 +2,25 @@
 // Removes Claude Code session answers blocked or refused by the safety classifier
 import { tool } from "@opencode-ai/plugin";
 
-export default async (ctx) => {
+export default async ({ directory, worktree }) => {
   return {
     tool: {
       "remove-resume-answers": tool({
         description: "Clean up Claude Code session answers blocked or refused by the safety mechanism",
         args: {
-          project: tool.schema.string().describe("Optional: session file path or project directory (default: current directory)"),
+          project: tool.schema.string().optional().describe("Optional: session file path or project directory (default: current directory)"),
         },
-        async execute({ project }) {
+        async execute({ project }, { directory: sessionDir }) {
           const { execSync } = await import("node:child_process");
           const { existsSync } = await import("node:fs");
           const { join } = await import("node:path");
 
-          // Find the script - check common locations
+          // 優先使用傳入的 project 參數，否則使用 session 目錄
+          const targetDir = project || sessionDir || worktree || process.cwd();
+
           const possiblePaths = [
+            join(targetDir, "scripts", "remove_resume_answers.sh"),
             join(process.cwd(), "scripts", "remove_resume_answers.sh"),
-            join(ctx?.root || process.cwd(), "scripts", "remove_resume_answers.sh"),
           ];
 
           let scriptPath = null;
@@ -35,8 +37,8 @@ export default async (ctx) => {
 
           try {
             const result = execSync(
-              `bash "${scriptPath}" ${project ? `"${project}"` : ""}`,
-              { encoding: "utf8", maxBuffer: 10 * 1024 * 1024 }
+              `bash "${scriptPath}"`,
+              { encoding: "utf8", maxBuffer: 10 * 1024 * 1024, cwd: targetDir }
             );
             return `✅ 清理完成\n\n${result}`;
           } catch (err) {
