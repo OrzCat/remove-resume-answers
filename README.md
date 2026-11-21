@@ -48,7 +48,13 @@ Or from inside a Claude Code session:
 
 ## As an OpenCode skill
 
-This repo includes a `skill.yaml` so it can be used as an OpenCode skill. OpenCode does not auto-download skill files from GitHub, so you need to install it manually:
+This repo includes a `skill.yaml` so it can be used as an OpenCode skill. OpenCode does not auto-download skill files from GitHub, so install with the one-liner:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/OrzCat/remove-resume-answers/main/install.sh | bash
+```
+
+Or manually:
 
 ```bash
 # 1. Register the plugin (optional, for tracking)
