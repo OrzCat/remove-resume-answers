@@ -1,0 +1,14 @@
+{
+  "name": "orzcat",
+  "owner": {
+    "name": "OrzCat",
+    "url": "https://github.com/OrzCat"
+  },
+  "plugins": [
+    {
+      "name": "resume-answer-remover",
+      "source": "./",
+      "description": "Remove Claude Code session answers that were blocked or refused by the safety classifier after a claude resume."
+    }
+  ]
+}
