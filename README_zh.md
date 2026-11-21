@@ -18,7 +18,7 @@
 ### 直接執行 script
 
 ```bash
-bash /Users/orzcat/plugin/resume-answer-remover/scripts/remove_resume_answers.sh /Users/orzcat/demo-project
+bash "${CLAUDE_PLUGIN_ROOT:-/Users/orzcat/plugin/resume-answer-remover}/scripts/remove_resume_answers.sh" /Users/orzcat/demo-project
 ```
 
 未傳參數時預設處理目前目錄（working directory）的專案 session。
