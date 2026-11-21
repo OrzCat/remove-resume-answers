@@ -14,7 +14,7 @@ Remove Claude Code session answers blocked or refused by the safety classifier.
 
 ### Via slash command
 
-- `/remove-resume-answers` (plugin command, or user command, see below)
+- `/remove-resume-answers` (plugin command)
 - Or run the script directly
 
 ### Run the script directly
@@ -51,10 +51,8 @@ Or from inside a Claude Code session:
 This repo also includes a `skill.yaml` so it can be used as an OpenCode skill:
 
 ```bash
-opencode skill add OrzCat/remove-resume-answers
+opencode plugin add OrzCat/remove-resume-answers
 ```
-
-Or manually copy `skill.yaml` to `~/.opencode/skills/`.
 
 ## Notes
 

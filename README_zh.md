@@ -12,7 +12,7 @@
 
 ### 透過 slash command
 
-- `/remove-resume-answers`（plugin command，或 user command，見下方）
+- `/remove-resume-answers`（plugin command）
 - 或直接跑 script
 
 ### 直接執行 script
@@ -49,10 +49,8 @@ claude plugin install remove-resume-answers@orzcat
 此 repo 同時包含 `skill.yaml`，可作為 OpenCode skill 使用：
 
 ```bash
-opencode skill add OrzCat/remove-resume-answers
+opencode plugin add OrzCat/remove-resume-answers
 ```
-
-或手動將 `skill.yaml` 複製到 `~/.opencode/skills/`。
 
 ## 注意
 
