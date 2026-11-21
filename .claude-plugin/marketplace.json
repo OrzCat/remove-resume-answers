@@ -6,7 +6,7 @@
   },
   "plugins": [
     {
-      "name": "resume-answer-remover",
+      "name": "remove-resume-answers",
       "source": "./",
       "description": "Remove Claude Code session answers that were blocked or refused by the safety classifier after a claude resume."
     }
