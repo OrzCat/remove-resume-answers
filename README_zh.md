@@ -46,10 +46,18 @@ claude plugin install remove-resume-answers@orzcat
 
 ## 作為 OpenCode skill
 
-此 repo 同時包含 `skill.yaml`，可作為 OpenCode skill 使用：
+此 repo 包含 `skill.yaml`，可作為 OpenCode skill 使用。OpenCode 不會自動從 GitHub 下載 skill 檔案，請手動安裝：
 
 ```bash
+# 1. 註冊 plugin（選擇性，用於追蹤）
 opencode plugin add OrzCat/remove-resume-answers
+
+# 2. 將 skill 檔案複製到 OpenCode skills 目錄
+mkdir -p ~/.config/opencode/skills
+curl -o ~/.config/opencode/skills/remove-resume-answers.yaml https://raw.githubusercontent.com/OrzCat/remove-resume-answers/main/skill.yaml
+
+# 3. 重新載入 OpenCode 設定
+opencode reload
 ```
 
 ## 注意

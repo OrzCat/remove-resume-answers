@@ -48,10 +48,18 @@ Or from inside a Claude Code session:
 
 ## As an OpenCode skill
 
-This repo also includes a `skill.yaml` so it can be used as an OpenCode skill:
+This repo includes a `skill.yaml` so it can be used as an OpenCode skill. OpenCode does not auto-download skill files from GitHub, so you need to install it manually:
 
 ```bash
+# 1. Register the plugin (optional, for tracking)
 opencode plugin add OrzCat/remove-resume-answers
+
+# 2. Copy the skill file to OpenCode skills directory
+mkdir -p ~/.config/opencode/skills
+curl -o ~/.config/opencode/skills/remove-resume-answers.yaml https://raw.githubusercontent.com/OrzCat/remove-resume-answers/main/skill.yaml
+
+# 3. Reload OpenCode configuration
+opencode reload
 ```
 
 ## Notes
