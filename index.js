@@ -1,51 +1,98 @@
-// remove-resume-answers OpenCode plugin
-// Removes Claude Code session answers blocked or refused by the safety classifier
-import { tool } from "@opencode-ai/plugin";
+import { execFile } from "node:child_process"
+import { existsSync } from "node:fs"
+import { resolve } from "node:path"
+import { fileURLToPath } from "node:url"
+import { promisify } from "node:util"
 
-export default async ({ directory, worktree }) => {
-  return {
-    tool: {
-      "remove-resume-answers": tool({
-        description: "Clean up Claude Code session answers blocked or refused by the safety mechanism",
-        args: {
-          project: tool.schema.string().optional().describe("Optional: session file path or project directory (default: current directory)"),
-        },
-        async execute({ project }, { directory: sessionDir }) {
-          const { execSync } = await import("node:child_process");
-          const { existsSync } = await import("node:fs");
-          const { join } = await import("node:path");
+const execFileAsync = promisify(execFile)
+const SCRIPT_PATH = fileURLToPath(new URL("./scripts/remove_resume_answers.sh", import.meta.url))
 
-          // 優先使用傳入的 project 參數，否則使用 session 目錄
-          const targetDir = project || sessionDir || worktree || process.cwd();
+function resolveTarget(target, cwd) {
+  const value = typeof target === "string" ? target.trim() : ""
+  return value ? resolve(cwd, value) : cwd
+}
 
-          const possiblePaths = [
-            join(targetDir, "scripts", "remove_resume_answers.sh"),
-            join(process.cwd(), "scripts", "remove_resume_answers.sh"),
-          ];
+function errorMessage(error) {
+  if (error && typeof error.stderr === "string" && error.stderr.trim()) {
+    return error.stderr.trim()
+  }
+  return error instanceof Error ? error.message : String(error)
+}
 
-          let scriptPath = null;
-          for (const p of possiblePaths) {
-            if (existsSync(p)) {
-              scriptPath = p;
-              break;
-            }
-          }
+async function runCleanup(target, cwd) {
+  if (!existsSync(SCRIPT_PATH)) {
+    throw new Error(`Cleanup script not found: ${SCRIPT_PATH}`)
+  }
 
-          if (!scriptPath) {
-            return "❌ 無法找到 remove_resume_answers.sh 腳本。請確認 repo 已正確克隆。";
-          }
+  const resolvedTarget = resolveTarget(target, cwd)
+
+  try {
+    const { stdout, stderr } = await execFileAsync("bash", [SCRIPT_PATH, resolvedTarget], {
+      cwd,
+      encoding: "utf8",
+      maxBuffer: 10 * 1024 * 1024,
+    })
+
+    return [stdout.trim(), stderr.trim()].filter(Boolean).join("\n")
+  } catch (error) {
+    throw new Error(errorMessage(error))
+  }
+}
+
+export default {
+  id: "remove-resume-answers",
+
+  async setup(ctx) {
+    await ctx.command.transform((editor) => {
+      editor.add({
+        name: "remove-resume-answers",
+        description: "Remove blocked or refused answers from Claude Code sessions",
+        async execute({ sessionID, prompt }) {
+          const target = prompt.text.trim() || ctx.location.directory
 
           try {
-            const result = execSync(
-              `bash "${scriptPath}"`,
-              { encoding: "utf8", maxBuffer: 10 * 1024 * 1024, cwd: targetDir }
-            );
-            return `✅ 清理完成\n\n${result}`;
-          } catch (err) {
-            return `❌ 清理失敗：${err.message}`;
+            const result = await runCleanup(target, ctx.location.directory)
+            await ctx.session.synthetic({
+              sessionID,
+              text: result || "Cleanup completed. No matching answers were found.",
+              description: "remove-resume-answers cleanup result",
+              resume: false,
+            })
+          } catch (error) {
+            const message = `Cleanup failed: ${errorMessage(error)}`
+            await ctx.session
+              .synthetic({
+                sessionID,
+                text: message,
+                description: "remove-resume-answers cleanup error",
+                resume: false,
+              })
+              .catch(() => {})
+            throw new Error(message)
           }
         },
-      }),
-    },
-  };
-};
+      })
+    })
+
+    await ctx.tool.transform((editor) => {
+      editor.add({
+        name: "remove-resume-answers",
+        description: "Remove blocked or refused answers from a Claude Code session",
+        input: {
+          type: "object",
+          properties: {
+            project: {
+              type: "string",
+              description: "Optional session file path or project directory",
+            },
+          },
+          additionalProperties: false,
+        },
+        async execute(input) {
+          const result = await runCleanup(input.project, ctx.location.directory)
+          return { content: result || "Cleanup completed. No matching answers were found." }
+        },
+      })
+    })
+  },
+}
