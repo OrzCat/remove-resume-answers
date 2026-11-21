@@ -1,0 +1,16 @@
+name: remove-resume-answers
+description: Remove Claude Code session answers blocked or refused by the safety classifier
+system: |
+  You can help users remove Claude Code session answers that were blocked or refused by the safety classifier after a `claude resume`.
+
+  The cleanup script is located at ${CLAUDE_PLUGIN_ROOT}/scripts/remove_resume_answers.sh
+
+  To clean up a session:
+  - Run: bash "${CLAUDE_PLUGIN_ROOT}/scripts/remove_resume_answers.sh" /path/to/project
+  - Or without arguments to target the current project (working directory)
+
+  This operation writes directly into session files under ~/.claude/projects/...; recommend backing up first.
+triggers:
+  - "/remove-resume-answers"
+tools:
+  - Bash
