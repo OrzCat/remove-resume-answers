@@ -20,7 +20,7 @@ Remove Claude Code session answers blocked or refused by the safety classifier.
 ### Run the script directly
 
 ```bash
-bash "${CLAUDE_PLUGIN_ROOT:-/Users/orzcat/plugin/resume-answer-remover}/scripts/remove_resume_answers.sh" /Users/orzcat/demo-project
+bash "${CLAUDE_PLUGIN_ROOT}/scripts/remove_resume_answers.sh" /Users/orzcat/demo-project
 ```
 
 With no argument, it targets the session of the current project (working directory).
