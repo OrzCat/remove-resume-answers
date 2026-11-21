@@ -3,5 +3,8 @@
   "version": "1.0.0",
   "description": "Remove Claude Code session answers blocked or refused by the safety classifier",
   "main": "index.js",
+  "dependencies": {
+    "@opencode-ai/plugin": "^1.0.0"
+  },
   "license": "MIT"
 }
